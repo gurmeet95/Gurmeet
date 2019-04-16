@@ -1,0 +1,108 @@
+
+print "\t\tRound Robin Scheduling"
+
+n = input("No. of Processes: ")
+queue = list()
+arrival_time = list()
+burst_time = list()
+process = list()
+
+CT = 0
+
+print "Enter Arrival Time & Burst Time for ",n," Process\n"
+for i in range(n):
+    p = "P"+str(i+1)
+    print "\n",p
+    process.append(p)
+    x = input("A.T : ")
+    arrival_time.append(x)
+    x = input("B.T : ")
+    burst_time.append(x)
+
+
+t = input("Time Quantum: ")
+BT = burst_time
+AT = arrival_time
+
+    # Sorting according to arrival time
+print AT
+print BT
+print process
+
+
+for i in range(n-1,0,-1):
+    for j in range(i):
+        if BT[j]>BT[j+1]:
+            AT[j],AT[j+1] = AT[j+1],AT[j]
+            BT[j],BT[j+1] = BT[j+1],BT[j]
+            process[j],process[j+1] = process[j+1],process[j]
+    print AT
+    print BT
+    print process
+
+bt = BT
+
+
+
+
+queue.append(process[0])
+start = 0
+end = 0
+ct = {}
+
+#for i in range(2):
+while queue != []:
+    k = process.index(queue[0])
+    
+    start = CT
+    remain = 0
+    if BT[k] <= t and BT[k] >0:
+        
+        CT += BT[k]
+        BT[k] -= BT[k]
+    elif BT[k] >t:
+        CT +=t
+        BT[k] -= t
+        remain +=1
+    for i in range(k+1,n):
+        if AT[i]>start and AT[i]<=CT:
+            queue.append(process[i])
+    print "appending\n",queue
+    if remain >= 1:
+        queue.append(process[k])
+        remain = 0
+    ct[queue[0]] = CT
+    del queue[0]
+    
+    print "deleling\n",queue
+    
+    print "BT: ",BT
+    
+
+
+print "\n\n\nCompletion Time: ",CT
+print ct
+
+print process
+
+tat = {}
+wt = {}
+# Calculating Turn Around Time
+for i in range(n):
+    
+    tat[process[i]] = ct[process[i]] - AT[i]
+    wt[process[i]] = tat[process[i]] - bt[i]
+    
+print "\nTrun Around Time: ",tat
+print "\nWaiting Time: ",wt
+
+
+avg_wt = 0
+for i in wt:
+    avg_wt +=wt[i]
+print "Average Waiting time: ",avg_wt
+   
+#print burst_time
+
+
+    
